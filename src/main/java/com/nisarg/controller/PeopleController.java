@@ -2,6 +2,8 @@ package com.nisarg.controller;
 
 import com.nisarg.bean.Person;
 import com.nisarg.repository.PersonRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +28,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class PeopleController {
   private PersonRepository personRepository;
 
+  @Operation(
+      description = "Save a new person into database table",
+      responses = {
+          @ApiResponse(description = "Returns 201 AKA Created if an insert is successful", responseCode = "201")
+      }
+  )
   @PostMapping
   public ResponseEntity<Person> save(@RequestBody Person person) {
     return new ResponseEntity<>(personRepository.save(person), HttpStatus.CREATED);
   }
 
+  @Operation(
+      description = "Find a person by primary key ID value",
+      responses = {
+          @ApiResponse(description = "If successful then returns all fields as JSON for a person with ID supplied as a parameter", responseCode = "302"),
+          @ApiResponse(description = "If a person is not found, then only 404 AKA not found is returned", responseCode = "404")
+      }
+  )
   @GetMapping("/{id}")
   public ResponseEntity<Person> find(@PathVariable long id) {
     Person person = personRepository.findById(id).orElse(null);
@@ -40,6 +55,14 @@ public class PeopleController {
       return new ResponseEntity<>(person, HttpStatus.FOUND);
     }
   }
+
+  @Operation(
+      description = "Find a person by primary key ID value",
+      responses = {
+          @ApiResponse(description = "If successful then returns all fields as JSON for a person with ID supplied as a parameter search matching whole name", responseCode = "302"),
+          @ApiResponse(description = "If a person is not found, then only 404 AKA not found is returned", responseCode = "404")
+      }
+  )
   @GetMapping("/find/{name}")
   public ResponseEntity<Person> findByName(@PathVariable String name) {
     Person person = personRepository.findByName(name);
@@ -50,11 +73,23 @@ public class PeopleController {
     }
   }
 
+  @Operation(
+      description = "Find All People from database",
+      responses = {
+          @ApiResponse(description = "Returns all people from database table", responseCode = "302")
+      }
+  )
   @GetMapping
   public ResponseEntity<List<Person>> findAll() {
     return new ResponseEntity<>(personRepository.findAll(Sort.by(Order.by("name"))), HttpStatus.OK);
   }
 
+  @Operation(
+      description = "Delete a person with a given ID/primary-key",
+      responses = {
+          @ApiResponse(description = "Returns 200 along with the deleted person as JSON output", responseCode = "200")
+      }
+  )
   @DeleteMapping("/{id}")
   public ResponseEntity<Person> delete(@PathVariable long id) {
     log.info("Person with id:{} deleted!", id);
@@ -62,8 +97,14 @@ public class PeopleController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @Operation(
+      description = "Delete all people from database",
+      responses = {
+          @ApiResponse(description = "Returns http status OK", responseCode = "200")
+      }
+  )
   @DeleteMapping
-  public ResponseEntity<Person> deleteAll() {
+  public ResponseEntity deleteAll() {
     log.info("Deleted All People!");
     personRepository.deleteAll();
     return new ResponseEntity<>(HttpStatus.OK);
