@@ -14,7 +14,7 @@ class PeopleDataService {
   }
 
   update(id, data) {
-    return http.put(`/${id}`, data);
+    return http.put("", data);
   }
 
   delete(id) {
