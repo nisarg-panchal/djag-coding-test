@@ -54,20 +54,39 @@ export default {
   name: "person-details",
   data() {
     return {
-      currentPerson: null,
+      currentPerson: {
+        id: null,
+        name: "",
+        email: "",
+        gender: "",
+        age: 0
+      },
       message: ''
     };
   },
   methods: {
     getPerson(id) {
-      PeopleDataService.get(id)
-      .then(response => {
-        this.currentPerson = response.data;
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+      console.log(id);
+      this.currentPerson.id = '200';
+      this.currentPerson.name = 'test';
+      this.currentPerson.email = 'test';
+      this.currentPerson.age = 'test';
+      this.currentPerson.gender = 'Female';
+
+      /*
+            PeopleDataService.get(id)
+            .then(response => {
+              console.log("Response:"+JSON.stringify(response));
+              this.currentPerson.id = response.data.id;
+              this.currentPerson.name = response.data.name;
+              this.currentPerson.email = response.data.email;
+              this.currentPerson.age = response.data.age;
+              this.currentPerson.gender = response.data.gender;
+            })
+            .catch(e => {
+              console.log(JSON.stringify(e));
+            });
+      */
     },
 
     updatePerson() {

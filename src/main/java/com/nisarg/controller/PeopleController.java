@@ -16,15 +16,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/people")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:8081")
 public class PeopleController {
   private PersonRepository personRepository;
 
@@ -37,6 +38,17 @@ public class PeopleController {
   @PostMapping
   public ResponseEntity<Person> save(@RequestBody Person person) {
     return new ResponseEntity<>(personRepository.save(person), HttpStatus.CREATED);
+  }
+
+  @Operation(
+      description = "Update a person",
+      responses = {
+          @ApiResponse(description = "", responseCode = "201")
+      }
+  )
+  @PutMapping
+  public ResponseEntity<Integer> update(@RequestBody Person person) {
+    return new ResponseEntity<>(personRepository.update(person.getId(), person.getName(), person.getEmail(), person.getGender(), person.getAge()), HttpStatus.OK);
   }
 
   @Operation(
