@@ -19,6 +19,12 @@
     <spring-boot-admin.version>3.1.1</spring-boot-admin.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+    <node.version>v16.18.1</node.version>
+    <npm.version>8.19.2</npm.version>
+    <frontend-src-dir>${project.basedir}/src/main/resources/static/registration</frontend-src-dir>
+    <maven.resources.plugin>3.3.0</maven.resources.plugin>
+    <encoding>UTF-8</encoding>
   </properties>
   <dependencies>
     <dependency>
@@ -117,6 +123,74 @@
             </exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.12.1</version>
+        <executions>
+          <execution>
+            <id>Install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <nodeVersion>${node.version}</nodeVersion>
+              <npmVersion>${npm.version}</npmVersion>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <nodeVersion>${node.version}</nodeVersion>
+          <workingDirectory>src/main/resources/static/registration</workingDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven.resources.plugin}</version>
+        <executions>
+          <execution>
+            <id>Copy Vue frontend into Spring Boot target static folder</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <encoding>${encoding}</encoding>
+              <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources/static/demyst-app/dist</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
