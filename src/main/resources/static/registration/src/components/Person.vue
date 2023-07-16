@@ -67,13 +67,12 @@ export default {
   methods: {
     getPerson(id) {
       console.log(id);
-      this.currentPerson.id = '200';
+      /*this.currentPerson.id = '200';
       this.currentPerson.name = 'test';
       this.currentPerson.email = 'test';
       this.currentPerson.age = 'test';
-      this.currentPerson.gender = 'Female';
+      this.currentPerson.gender = 'Female';*/
 
-      /*
             PeopleDataService.get(id)
             .then(response => {
               console.log("Response:"+JSON.stringify(response));
@@ -86,7 +85,6 @@ export default {
             .catch(e => {
               console.log(JSON.stringify(e));
             });
-      */
     },
 
     updatePerson() {
